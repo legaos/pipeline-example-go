@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: helloserver
-  type: NodePort
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 80
@@ -35,3 +35,19 @@ spec:
         image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
         ports:
         - containerPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-helloserver
+  labels:
+    app: helloserver
+spec:
+  rules:
+  - host: hello-teste.xtecloud.io
+    http:
+      paths:
+      - backend:
+          serviceName: helloserver-service
+          servicePort: http
+        path: /
